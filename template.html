@@ -1,0 +1,51 @@
+<nop><!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible", content="IE=edge">
+    <meta name="description", content="">
+    <meta name="viewport", content="width=device-width, initial-scale=1">
+    <title>organic-express-api-doc</title>
+    <style>
+      .title {
+        margin: 0 auto;
+        padding-bottom: 50px;
+        width: 960px;
+        text-align: center;
+        font-size: 4em;
+      }
+      article {
+        margin: 0 auto;
+        margin-bottom: 10px;
+        width: 960px;
+        padding: 50px;
+        background-color: whitesmoke;
+        border: 1px solid grey;
+        border-radius: 5px;
+      }
+      .action {
+        font-size: 3em;
+      }
+      .comments h1 {
+
+      }
+    </style>
+</head>
+<body>
+</nop>
+
+<div class="title">organic-express-api-doc</div>
+
+<% for (var i = 0; i < actions.length; i++) { %>
+  <article> 
+    <h1 class="action"><%= actions[i].method.toUpperCase() %> - <%= actions[i].url %></h1>
+    <div class="comments">
+      <%- actions[i].comments %>
+    </div>
+  </article>
+<% } %>
+        
+<nop>
+</body>
+</html>
+</nop>
