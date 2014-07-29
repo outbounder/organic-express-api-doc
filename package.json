@@ -1,7 +1,7 @@
 {
   "name": "organic-express-api-doc",
   "version": "0.0.0",
-  "description": "",
+  "description": "Organelle for generating documentation by runtime reflection of express mounted route handlers and their source code.",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
@@ -19,5 +19,13 @@
     "esprima": "~1.2.2",
     "markedejs": "~0.1.0",
     "async": "~0.9.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/outbounder/organic-express-api-doc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/outbounder/organic-express-api-doc/issues"
+  },
+  "homepage": "https://github.com/outbounder/organic-express-api-doc"
 }
