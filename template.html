@@ -1,4 +1,4 @@
-<nop><!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -6,46 +6,145 @@
     <meta name="description", content="">
     <meta name="viewport", content="width=device-width, initial-scale=1">
     <title>organic-express-api-doc</title>
+    <link rel="stylesheet" type="text/css" href="http://sindresorhus.com/github-markdown-css/github-markdown.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="https://rawgit.com/leafo/sticky-kit/v1.1.1/jquery.sticky-kit.min.js"></script>
     <style>
       .title {
-        margin: 0 auto;
-        padding-bottom: 50px;
-        width: 960px;
-        text-align: center;
-        font-size: 4em;
+        float: right;
       }
+      .title a {
+        font-size: 3em;
+      }
+
+      .toc ul {
+        list-style-type: none;
+        float: left;
+      }
+      .toc li {
+        overflow: hidden;
+        margin: 2px;
+        background-color: #efefef;
+      }
+      .toc a {
+        font-size: 1.5em;
+        text-decoration: none;
+      }
+
       article {
         margin: 0 auto;
         margin-bottom: 10px;
         width: 960px;
         padding: 50px;
-        background-color: whitesmoke;
+        background-color: #fefefe;
         border: 1px solid grey;
         border-radius: 5px;
       }
-      .action {
-        font-size: 3em;
+      .actions {
+        float: left;
       }
-      .comments h1 {
+      .action {
+        
+      }
+      .action .method {
+        font-size: 2em;
+      }
+      .action .url {
+        font-size: 1.5em;
+      }
 
+      .mini-toc {
+        width: 350px;
+        float: left;
+        margin-right: 10px;
+      }
+      
+      #topBtn {
+        position: fixed;
+        right: 150px;
+        bottom: 50px;
+      }
+      .clear {
+        clear: both;
+      }
+      .is_stuck_above_all {
+        z-index: 1000;
       }
     </style>
 </head>
 <body>
-</nop>
 
-<div class="title">organic-express-api-doc</div>
+  <div class="title" data-sticky>
+    <a href="#" ><%= doc.name %></a>
+    <span><%= " v" + doc.version %></span>
+  </div>
+  <div class="toc">
+    <% var columnsCount = 3; %>
+    <% for (var c = 0; c < columnsCount; c++) { %>
+      <% var startIndex = Math.ceil(c * doc.apis.length/columnsCount); %>
+      <% var endIndex = Math.ceil((c+1) * doc.apis.length/columnsCount); %>
+      <ul>
+        <% for (var i = startIndex; i < endIndex; i++) { %>
+          <% if(!doc.apis[i]) break %>
+          <li>
+            <a href="#<%= doc.apis[i].baseUrl %>"> <%= doc.apis[i].baseUrl %></a>
+          </li>
+        <% } %>
+      </ul>
+    <% } %>
+    <div class="clear"></div>
+  </div>
 
-<% for (var i = 0; i < actions.length; i++) { %>
-  <article> 
-    <h1 class="action"><%= actions[i].method.toUpperCase() %> - <%= actions[i].url %></h1>
-    <div class="comments">
-      <%- actions[i].comments %>
-    </div>
-  </article>
-<% } %>
+  
+
+  <% for (var i = 0; i < doc.apis.length; i++) { %>
+    <section class="markdown-body" data-sticky_parent> 
+      <div class="mini-toc" data-sticky_column>
+        <div>
+          <a name="<%= doc.apis[i].baseUrl %>"></a>
+          <label><%= doc.apis[i].baseUrl %></label>
+          <a href="#<%= doc.apis[i].baseUrl %>"><span class="octicon octicon-link"></span></a>
+        </div>
+        <ul>
+          <% for(var k = 0; k < doc.apis[i].actions.length; k++) { %>
+            <% var action = doc.apis[i].actions[k] %>
+            <li>
+              <a href="#<%= action.method+"-"+action.actionUrl %>"><%= action.method.toUpperCase()+" "+action.actionUrl %></a>
+            </li>
+          <% } %>
+        </ul>
+      </div>
+      <div class="actions" data-sticky_column>
+        <% for(var k = 0; k < doc.apis[i].actions.length; k++) { %>
+          <% var action = doc.apis[i].actions[k] %>
+          <article class="action">
+            <a name="<%= action.method+"-"+action.actionUrl %>"></a>
+            <h2 class="method"><%= action.method.toUpperCase() %> <%= action.actionUrl %> </h2>
+            <a href="#<%= action.method+"-"+action.actionUrl %>"><span class="octicon octicon-link"></span></a>
+            <div class="comments"><%- action.comments %></div>
+            <div class="metadata">
+              <%- action.metadata %>
+            </div>
+          </article>
+        <% } %>
+      </div>
+      <div class="clear"></div>
+    </section>
+  <% } %>
         
-<nop>
+  <a id="topBtn" href="#">TOP</a>
+
+  <script type="text/javascript">
+    $(function() {
+      $("[data-sticky_column]").stick_in_parent({
+        parent: "[data-sticky_parent]"
+      });
+      $("[data-sticky]").stick_in_parent({
+        sticky_class: "is_stuck_above_all"
+      });
+    });
+    
+  </script>
+
 </body>
 </html>
-</nop>
