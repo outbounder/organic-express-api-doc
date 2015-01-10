@@ -5,6 +5,8 @@ var async = require("async")
 
 var ExpressDoc = require("./lib/express-app-to-documentation")
 var DocGenerator = require("./lib/documentation-generator")
+var fs = require("fs")
+var path = require("path")
 
 var acquireOrganelleDNA = function(dna){
   var result = clone(dna)
@@ -90,6 +92,22 @@ module.exports = function(plasma, dna) {
       })
     })
   else
+  if(dna.destinationFile) {
+    generateDocs(dna, function(err, docs){
+      if(err) return console.error(err)
+      generateHtml(docs, dna, function(err, html){
+        if(err) return console.error(err)
+        if(!html) return console.error("html is not found!!!!", err, html)
+        fs.writeFile(path.join(process.cwd(), dna.destinationFile), html, function(err){
+          if(err) return console.error(err)
+          if(dna.emitReady)
+            plasma.emit({type: dna.emitReady, data: { docs: docs, html: html } })
+          if(dna.log)
+            console.info("--------------------------- generated api docs and saved at", dna.destinationFile)  
+        })
+      })
+    })
+  } else
     generateDocs(dna, function(err, docs){
       if(err) return console.error(err)
       if(dna.emitReady)
