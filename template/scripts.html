@@ -1,0 +1,29 @@
+<% include ./vendor/js.html %>
+<script type="text/javascript">
+  $(function() {
+    $("[data-sticky_column]").stick_in_parent({
+      parent: "[data-sticky_parent]"
+    });
+    $("[data-sticky]").stick_in_parent({
+      sticky_class: "is_stuck_above_all"
+    });
+    $(".toggleComments").click(function(e){
+      var value = $(this).attr("data-target")
+      var $comments = $(".comments[data-target="+value+"]")
+      $comments.toggle()
+      if($comments.is(":visible") )
+        $(this).html("on")
+      else
+        $(this).html("off")
+    })
+    $(".toggleSourceCode").click(function(e){
+      var value = $(this).attr("data-target")
+      var $source = $(".source[data-target="+value+"]")
+      $source.toggle()
+      if($source.is(":visible") )
+        $(this).html("on")
+      else
+        $(this).html("off")
+    })
+  });
+</script>

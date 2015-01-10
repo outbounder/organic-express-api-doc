@@ -1,0 +1,20 @@
+<div class="title" data-sticky>
+  <a href="#" ><%= doc.name %></a>
+  <span><%= " v" + doc.version %></span>
+</div>
+<div class="toc">
+  <% var columnsCount = 3; %>
+  <% for (var c = 0; c < columnsCount; c++) { %>
+    <% var startIndex = Math.ceil(c * doc.apis.length/columnsCount); %>
+    <% var endIndex = Math.ceil((c+1) * doc.apis.length/columnsCount); %>
+    <ul>
+      <% for (var i = startIndex; i < endIndex; i++) { %>
+        <% if(!doc.apis[i]) break %>
+        <li>
+          <a href="#<%= doc.apis[i].baseUrl %>"> <%= doc.apis[i].baseUrl %></a>
+        </li>
+      <% } %>
+    </ul>
+  <% } %>
+  <div class="clear"></div>
+</div>

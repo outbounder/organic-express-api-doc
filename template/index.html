@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible", content="IE=edge">
+    <meta name="description", content="">
+    <meta name="viewport", content="width=device-width, initial-scale=1">
+    <title><%= doc.name %></title>
+    <% include ./styles.html %>
+    <% include ./scripts.html %>
+</head>
+<body>
+
+  <% include ./header.html %>
+
+  <% for (var i = 0; i < doc.apis.length; i++) { %>
+    <section class="markdown-body" data-sticky_parent> 
+      <div class="mini-toc" data-sticky_column>
+        <div>
+          <a name="<%= doc.apis[i].baseUrl %>"></a>
+          <label><%= doc.apis[i].baseUrl %></label>
+          <a href="#<%= doc.apis[i].baseUrl %>"><span class="octicon octicon-link"></span></a>
+        </div>
+        <ul>
+          <% for(var k = 0; k < doc.apis[i].actions.length; k++) { %>
+            <% var action = doc.apis[i].actions[k] %>
+            <li>
+              <a href="#<%= action.method+"-"+action.actionUrl %>"><%= action.method.toUpperCase()+" "+action.actionUrl %></a>
+            </li>
+          <% } %>
+        </ul>
+      </div>
+      <div class="actions" data-sticky_column>
+        <% for(var k = 0; k < doc.apis[i].actions.length; k++) { %>
+          <% var action = doc.apis[i].actions[k] %>
+          <article class="action">
+            <a name="<%= action.method+"-"+action.actionUrl %>"></a>
+            <h2 class="method"><%= action.method.toUpperCase() %> <%= action.actionUrl %> </h2>
+            <a href="#<%= action.method+"-"+action.actionUrl %>"><span class="octicon octicon-link"></span></a>
+            <div class="metadata">
+              <%- action.metadata %>
+            </div>
+            <div>
+              <p>
+                Comments:
+                <a href="javascript: void(0)" class="toggleComments" data-target="<%= i+'-'+k %>">on</a>
+              </p>
+              <div data-target="<%= i+'-'+k %>" class="comments"><%- action.comments %></div>
+            </div>
+            <div>
+              <p>
+                SourceCode:
+                <a href="javascript: void(0)" class="toggleSourceCode" data-target="<%= i+'-'+k %>">off</a>
+              </p>
+              <div data-target="<%= i+'-'+k %>" class="source" style="display: none">
+                <% for(var s = 0; s<action.handlers.length; s++){ %>
+                  <pre><code><%- action.handlers[s].toString().trim()+"\n" %></code></pre>
+                <% } %>
+              </div>
+            </div>
+          </article>
+        <% } %>
+      </div>
+      <div class="clear"></div>
+    </section>
+  <% } %>
+        
+  <a id="topBtn" href="#">TOP</a>
+
+</body>
+</html>

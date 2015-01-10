@@ -2,7 +2,7 @@
 
 Organelle for generating documentation by runtime reflection of express mounted route handlers and their source code.
 
-** experimental/ **
+** experimental **
 
 ## dna
 
@@ -16,8 +16,8 @@ Organelle for generating documentation by runtime reflection of express mounted 
       "docsMetadata": {
         "source": "docs/api"
       },
-      "log": true,
-      "liveTemplateReload": true
+      "log": false,
+      "liveTemplateReload": false
     }
 
 ## `dna` property
@@ -48,3 +48,38 @@ Indicates additional metadata information by default stored in markdown files wh
     ### query params
 
     * :query_params
+
+## tips & tricks
+
+### generate docs from command line via orgnaic-angel
+
+using [angelabilities-reactions]() adding this dna snippted will generate docs for your runtime generated routes via
+
+    $ angel build docs
+
+The snippet:
+
+    {
+      "reactions": {
+        ...
+        "build docs": {
+          "emit": {
+            "type": "build",
+            "source": "node_modules/organic-express-api-doc",
+            "dna": {
+              "organic-api-routes": "@processes.index.plasma.organic-api-routes"
+            },
+
+            "destinationFile": "/docs/api.html",
+
+            "docsMetadata": {
+              "source": "docs/api"
+            },
+            "log": true
+          }
+        },
+        "build": {
+          "do": [..., "build docs"]
+        }
+      }
+    }
