@@ -1,4 +1,4 @@
-# organic-express-api-doc
+# organic-express-api-doc v0.0.1
 
 Organelle for generating documentation by runtime reflection of express mounted route handlers and their source code.
 
@@ -24,11 +24,18 @@ Organelle for generating documentation by runtime reflection of express mounted 
 
 Its value is used to build organelles responsible for [express routes mounting](https://github.com/outbounder/organic-express-routes).
 
-All organelles are expected to `reactOn` and to `emitReady`. Additionally `log: false` is applied to their corresponding dna before triggering their build.
+**All organelles are expected to `reactOn` and to `emitReady`. Additionally `log: false` is applied to their corresponding dna before triggering their build.**
 
 ## `docsMetadata` property
 
 Indicates additional metadata information by default stored in markdown files where api routes are matched as follows
+
+    ... any markdown content ...
+    ## METHOD url
+    ... markdown content for api action
+    ...
+
+So for example given the markdown bellow:
 
     # markdown file title
 
@@ -48,6 +55,13 @@ Indicates additional metadata information by default stored in markdown files wh
     ### query params
 
     * :query_params
+
+Will be extracted metadata information for the following routes:
+
+* GET /api/resource
+* PUT /api/resource/:url_param
+
+**Notice** that methods and urls should exactly match to your mounted express route handlers (case sensitive ;)
 
 ## tips & tricks
 
@@ -83,3 +97,20 @@ The snippet:
         }
       }
     }
+
+## under-the-hood
+
+1. creates a fake Express App object for runtime code reflection of handlers
+2. isolates given organelles for mounting express routes and triggers their `reactOn` implementation
+3. constructs ordered data structure:
+
+    * Documentation
+      * Api
+        * Action
+          * method
+          * url
+          * handlers
+          * comments
+          * metadata
+
+4. Uses that structure to generate html passing it to ejs based template engine.
