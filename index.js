@@ -70,11 +70,11 @@ module.exports = function(plasma, dna) {
       var response = { html: "", generatedDocs: null}
       app.get(dna.mountOn, function(req, res, next){
         if(!dna.liveTemplateReload)
-          res.status(200).send(response.html).end()
+          res.status(200).send(response.html)
         else
           generateHtml(response.generatedDocs, dna, function(err, html){
             if(err) return next(err)
-            res.status(200).send(html).end()
+            res.status(200).send(html)
           })
       })
       generateDocs(dna, function(err, docs){
