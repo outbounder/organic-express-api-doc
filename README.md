@@ -8,19 +8,21 @@ Organelle for generating documentation by runtime reflection of express mounted 
 
     {
       "source": "node_modules/organic-express-api-doc",
-      "dna": {
-        "organic-api-routes": "@processes.index.plasma.organic-api-routes"
-      },
       "reactOn": ["ExpressServer"],
       "mountOn": "/api-docs",
+      "routes": {
+        "organic-api-routes": "@processes.index.plasma.organic-api-routes"
+      },
       "docsMetadata": {
-        "source": "docs/api"
+        "source": "docs/api",
+        "autopopulate": false,
+        "populateFilename": "api.md"
       },
       "log": false,
       "liveTemplateReload": false
     }
 
-## `dna` property
+## `routes` property
 
 Its value is used to build organelles responsible for [express routes mounting](https://github.com/outbounder/organic-express-routes).
 
@@ -31,7 +33,7 @@ Its value is used to build organelles responsible for [express routes mounting](
 Indicates additional metadata information by default stored in markdown files where api routes are matched as follows
 
     ... any markdown content ...
-    ## METHOD url
+    ## METHOD route
     ... markdown content for api action
     ...
 
@@ -62,6 +64,10 @@ Will be extracted metadata information for the following routes:
 * PUT /api/resource/:url_param
 
 **Notice** that methods and urls should exactly match to your mounted express route handlers (case sensitive ;)
+
+### `autopopulate` property 
+
+When set to true will intercept all incoming requests and their responses and upon `kill` chemical will dump at `metaData .source \ .populateFilename` markdown documentation with sample snippets.
 
 ## tips & tricks
 

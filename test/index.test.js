@@ -11,7 +11,7 @@ describe("index", function(){
     var app = require("express")()
     instance = new Organelle(plasma, {
       "source": "node_modules/organic-express-api-doc",
-      "dna": {
+      "routes": {
         "organic-api-routes": {
           "source": "node_modules/organic-express-routes",
           "reactOn": ["ExpressServer"],
@@ -39,7 +39,7 @@ describe("index", function(){
       expect(c.data.docs).to.exist
       expect(c.data.docs.length).to.be.equal(1)
       expect(c.data.docs[0].name).to.be.equal("organic-express-api-doc")
-      expect(c.data.docs[0].version).to.be.equal("0.0.2")
+      expect(c.data.docs[0].version).to.be.equal("0.1.0")
       expect(c.data.docs[0].apis).to.exist
       expect(c.data.docs[0].apis.length).to.be.equal(1)
       expect(c.data.html).to.exist
