@@ -5,7 +5,7 @@ var async = require("async")
 
 var ExpressDoc = require("./lib/express-app-to-documentation")
 var DocGenerator = require("./lib/documentation-generator")
-var populateDocsMetadata = require("./lib/populate-docs-metadata-folder")
+var populateDocsMetadata = require("./lib/populate-docs-metadata")
 var fs = require("fs")
 var path = require("path")
 

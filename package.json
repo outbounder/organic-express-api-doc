@@ -1,6 +1,6 @@
 {
   "name": "organic-express-api-doc",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Organelle for generating documentation by runtime reflection of express mounted route handlers and their source code.",
   "main": "index.js",
   "scripts": {

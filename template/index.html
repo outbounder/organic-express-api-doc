@@ -24,7 +24,7 @@
           <% for(var k = 0; k < doc.apis[i].actions.length; k++) { %>
             <% var action = doc.apis[i].actions[k] %>
             <li>
-              <a href="#<%= action.method+"-"+action.actionUrl %>"><%= action.method.toUpperCase()+" "+action.actionUrl %></a>
+              <a href="#<%= action.method+"-"+action.actionUrl %>"><%= action.method.toUpperCase()+" "+action.actionUrl.replace(doc.apis[i].baseUrl, "") %></a>
             </li>
           <% } %>
         </ul>
