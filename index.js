@@ -6,6 +6,7 @@ var async = require("async")
 var ExpressDoc = require("./lib/express-app-to-documentation")
 var DocGenerator = require("./lib/documentation-generator")
 var populateDocsMetadata = require("./lib/populate-docs-metadata")
+var populatedDocsRender = require("./lib/render-docs-metadata")
 var fs = require("fs")
 var path = require("path")
 
@@ -65,74 +66,74 @@ var generateHtml = function(docs, dna, next){
   g.generateHtml(docs[0], next)
 }
 
-
+var buildDocs = function(plasma, dna, responseBuffer){
+  generateDocs(dna, function(err, docs){
+    if(err) return console.error(err)
+    responseBuffer.generatedDocs = docs
+    generateHtml(docs, dna, function(err, html){
+      if(err) return console.error(err)
+      if(!html) return console.error("html is not found!!!!", err, html)
+      responseBuffer.html = html
+      if(dna.emitReady)
+        plasma.emit({type: dna.emitReady, data: { docs: docs, html: html } })
+      if(dna.log)
+        console.info("--------------------------- generated api docs and mounted at", dna.mountOn)
+    })
+  })
+}
 
 module.exports = function(plasma, dna) {
   if(dna.reactOn) {
     plasma.on(dna.reactOn, function(c){
       var app = c.data || c[0].data
-      var response = { html: "", generatedDocs: null}
+      var responseBuffer = { html: "", generatedDocs: null}
       
-      if(dna.docsMetadata && dna.docsMetadata.autopopulate) {
-        app.use(populateDocsMetadata.middleware)
-        plasma.on("kill", function(c, next){
-          populateDocsMetadata.dumpToFile(
-            path.join(
-              process.cwd(), 
-              dna.docsMetadata.source, 
-              dna.docsMetadata.populateFilename || "api.md"
-            ), next)
-        })
+      if(dna.docsMetadata) {
+        if(!dna.docsMetadata.populateFilename)
+          dna.docsMetadata.populateFilename = "api.md"
+        dna.docsMetadata.jsonStoreFilepath = path.join(
+          process.cwd(), 
+          dna.docsMetadata.source, 
+          dna.docsMetadata.populateFilename+".json"
+        )
+        dna.docsMetadata.markdownFilepath = path.join(
+          process.cwd(), 
+          dna.docsMetadata.source, 
+          dna.docsMetadata.populateFilename
+        )
+        if(dna.docsMetadata.autopopulate) {
+          populateDocsMetadata.loadFileDump(dna.docsMetadata.jsonStoreFilepath)
+          app.use(populateDocsMetadata.middleware)
+          plasma.on("kill", function(c, next){
+            populateDocsMetadata.dumpToFile(dna.docsMetadata.jsonStoreFilepath, next)
+          })
+        }
       }
 
       if(dna.mountOn)
         app.get(dna.mountOn, function(req, res, next){
           if(!dna.liveTemplateReload)
-            res.status(200).send(response.html)
+            res.status(200).send(responseBuffer.html)
           else
-            generateHtml(response.generatedDocs, dna, function(err, html){
+            generateHtml(responseBuffer.generatedDocs, dna, function(err, html){
               if(err) return next(err)
               res.status(200).send(html)
             })
         })
 
-      if(dna.routes)
-        generateDocs(dna, function(err, docs){
-          if(err) return console.error(err)
-          response.generatedDocs = docs
-          generateHtml(docs, dna, function(err, html){
-            if(err) return console.error(err)
-            if(!html) return console.error("html is not found!!!!", err, html)
-            response.html = html
-            if(dna.emitReady)
-              plasma.emit({type: dna.emitReady, data: { docs: docs, html: html } })
-            if(dna.log)
-              console.info("--------------------------- generated api docs and mounted at", dna.mountOn)
-          })
-        })
+      if(dna.routes) {
+        if(dna.docsMetadata && dna.docsMetadata.renderAutopopulatedDocs) {
+          populatedDocsRender.loadAndRenderMarkdown(
+            dna.docsMetadata.jsonStoreFilepath, 
+            dna.docsMetadata.markdownFilepath, 
+            function(err){
+              if(err) return console.error(err)
+              console.info(dna.docsMetadata.markdownFilepath, "markdown docs updated")
+              buildDocs(plasma, dna, responseBuffer)
+            })
+        } else
+          buildDocs(plasma, dna, responseBuffer)
+      }
     })
-  } else
-  if(dna.destinationFile) {
-    generateDocs(dna, function(err, docs){
-      if(err) return console.error(err)
-      generateHtml(docs, dna, function(err, html){
-        if(err) return console.error(err)
-        if(!html) return console.error("html is not found!!!!", err, html)
-        fs.writeFile(path.join(process.cwd(), dna.destinationFile), html, function(err){
-          if(err) return console.error(err)
-          if(dna.emitReady)
-            plasma.emit({type: dna.emitReady, data: { docs: docs, html: html } })
-          if(dna.log)
-            console.info("--------------------------- generated api docs and saved at", dna.destinationFile)  
-        })
-      })
-    })
-  } else
-    generateDocs(dna, function(err, docs){
-      if(err) return console.error(err)
-      if(dna.emitReady)
-        plasma.emit({type: dna.emitReady, data: {docs: docs} })
-      if(dna.log)
-        console.info("--------------------------- generated api docs struct done")
-    })
+  }
 }

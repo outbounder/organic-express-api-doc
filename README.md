@@ -1,8 +1,6 @@
-# organic-express-api-doc v0.0.1
+# organic-express-api-doc v0.2.x
 
 Organelle for generating documentation by runtime reflection of express mounted route handlers and their source code.
-
-** experimental **
 
 ## dna
 
@@ -16,6 +14,7 @@ Organelle for generating documentation by runtime reflection of express mounted 
       "docsMetadata": {
         "source": "docs/api",
         "autopopulate": false,
+        "renderAutopopulatedDocs": false,
         "populateFilename": "api.md"
       },
       "log": false,
@@ -67,56 +66,37 @@ Will be extracted metadata information for the following routes:
 
 ### `autopopulate` property 
 
-When set to true will intercept all incoming requests and their responses and upon `kill` chemical will dump at `metaData .source \ .populateFilename` markdown documentation with sample snippets.
+When enabled will intercept all incoming requests and their responses and upon `kill` chemical will dump at `dna.docsMetadata` `{.source} \ {.populateFilename}.json` json data documentation with samples 'schemified'.
 
-## tips & tricks
+### `renderAutopopulatedDocs` property
 
-### generate docs from command line via orgnaic-angel
+When enabled will load and render `dna.docsMetadata` `{.source} \ {.populateFilename}.json` json data documentation into `dna.docsMetadata` `{.source} \ {.populateFilename}` markdown file suitable 
+for parsing by docsMetadata pipeline.
 
-using [angelabilities-reactions]() adding this dna snippted will generate docs for your runtime generated routes via
+*Noteice* that this happens when the organelle is constructed, therefore it won't output anything if the json file is missing.
 
-    $ angel build docs
-
-The snippet:
-
-    {
-      "reactions": {
-        ...
-        "build docs": {
-          "emit": {
-            "type": "build",
-            "source": "node_modules/organic-express-api-doc",
-            "dna": {
-              "organic-api-routes": "@processes.index.plasma.organic-api-routes"
-            },
-
-            "destinationFile": "/docs/api.html",
-
-            "docsMetadata": {
-              "source": "docs/api"
-            },
-            "log": true
-          }
-        },
-        "build": {
-          "do": [..., "build docs"]
-        }
-      }
-    }
 
 ## under-the-hood
 
-1. creates a fake Express App object for runtime code reflection of handlers
-2. isolates given organelles for mounting express routes and triggers their `reactOn` implementation
-3. constructs ordered data structure:
+### the concept
 
-    * Documentation
-      * Api
-        * Action
-          * method
-          * url
-          * handlers
-          * comments
-          * metadata
+#### sampling routes
 
-4. Uses that structure to generate html passing it to ejs based template engine.
+0. load `sampled routes metadata` if exists
+1. intercept all incoming http requests and their respective responses
+2. convert their properties (`headers`, `body`, ...) to a schema-like structures
+3. consolidate requests/responses into samples per `method` : `route`
+4. store `sampled routes metadata`
+
+#### structure routes map
+
+1. intercept Express app's mount methods (`all`, `get`, `post`, ...)
+2. analyze the handlers passed
+3. stored `sampled routes metadata` is loaded and trasnformed to markdown file
+4. load markdown files and transform them to `routes metadata`
+5. generate `in-memory documentation structure` of analyzed routes forming their respective apis with their `routes metadata`
+
+#### documentation rendering
+
+1. mount route handler on Express app
+2. respond with `in-memory documentation structure` transformed as `html+css+js` to incoming requests
