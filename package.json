@@ -1,6 +1,6 @@
 {
   "name": "organic-express-api-doc",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Organelle for generating documentation by runtime reflection of express mounted route handlers and their source code.",
   "main": "index.js",
   "scripts": {
@@ -24,6 +24,7 @@
     "express-buffer-response": "^1.0.3",
     "glob-stream": "^4.0.0",
     "markedejs": "~0.1.0",
+    "methods": "^1.1.1",
     "on-finished": "^2.2.0",
     "organic-nucleus": "0.0.1",
     "underscore": "~1.6.0"
