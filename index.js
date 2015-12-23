@@ -1,6 +1,6 @@
 var Nucleus = require("organic-nucleus")
 var Plasma = require("organic-plasma")
-var clone = require("clone")
+var _ = require("lodash")
 var async = require("async")
 
 var ExpressDoc = require("./lib/express-app-to-documentation")
@@ -11,7 +11,7 @@ var fs = require("fs")
 var path = require("path")
 
 var acquireOrganelleDNA = function(dna){
-  var result = clone(dna)
+  var result = _.cloneDeep(dna)
   result.reactOn = "document"
   result.emitReady = "documentDone"
   result.log = false
@@ -47,7 +47,7 @@ var generateDocs = function(dna, done){
     subplasma.emit({
       type: "document",
       data: fakeExpress
-    })  
+    })
   }, function(err){
     // once all organelles completed
     if(err) return done(err)
@@ -87,18 +87,18 @@ module.exports = function(plasma, dna) {
     plasma.on(dna.reactOn, function(c){
       var app = c.data || c[0].data
       var responseBuffer = { html: "", generatedDocs: null}
-      
+
       if(dna.docsMetadata) {
         if(!dna.docsMetadata.populateFilename)
           dna.docsMetadata.populateFilename = "api.md"
         dna.docsMetadata.jsonStoreFilepath = path.join(
-          process.cwd(), 
-          dna.docsMetadata.source, 
+          process.cwd(),
+          dna.docsMetadata.source,
           dna.docsMetadata.populateFilename+".json"
         )
         dna.docsMetadata.markdownFilepath = path.join(
-          process.cwd(), 
-          dna.docsMetadata.source, 
+          process.cwd(),
+          dna.docsMetadata.source,
           dna.docsMetadata.populateFilename
         )
         if(dna.docsMetadata.autopopulate) {
@@ -124,8 +124,8 @@ module.exports = function(plasma, dna) {
       if(dna.routes) {
         if(dna.docsMetadata && dna.docsMetadata.renderAutopopulatedDocs) {
           populatedDocsRender.loadAndRenderMarkdown(
-            dna.docsMetadata.jsonStoreFilepath, 
-            dna.docsMetadata.markdownFilepath, 
+            dna.docsMetadata.jsonStoreFilepath,
+            dna.docsMetadata.markdownFilepath,
             function(err){
               if(err) return console.error(err)
               console.info(dna.docsMetadata.markdownFilepath, "markdown docs updated")
