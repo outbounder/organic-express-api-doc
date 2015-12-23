@@ -64,13 +64,13 @@ Will be extracted metadata information for the following routes:
 
 **Notice** that methods and urls should exactly match to your mounted express route handlers (case sensitive ;)
 
-### `autopopulate` property 
+### `autopopulate` property
 
 When enabled will intercept all incoming requests and their responses and upon `kill` chemical will dump at `dna.docsMetadata` `{.source} \ {.populateFilename}.json` json data documentation with samples 'schemified'.
 
 ### `renderAutopopulatedDocs` property
 
-When enabled will load and render `dna.docsMetadata` `{.source} \ {.populateFilename}.json` json data documentation into `dna.docsMetadata` `{.source} \ {.populateFilename}` markdown file suitable 
+When enabled will load and render `dna.docsMetadata` `{.source} \ {.populateFilename}.json` json data documentation into `dna.docsMetadata` `{.source} \ {.populateFilename}` markdown file suitable
 for parsing by docsMetadata pipeline.
 
 *Noteice* that this happens when the organelle is constructed, therefore it won't output anything if the json file is missing.
