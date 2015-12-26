@@ -1,4 +1,4 @@
-# organic-express-api-doc v0.2.x
+# organic-express-api-doc v0.3.0
 
 Organelle for generating documentation by runtime reflection of express mounted route handlers and their source code.
 
