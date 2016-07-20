@@ -1,6 +1,6 @@
 {
   "name": "organic-express-api-doc",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "Organelle for generating documentation by runtime reflection of express mounted route handlers and their source code.",
   "main": "index.js",
   "scripts": {
@@ -13,9 +13,11 @@
     "express": "^4.11.0",
     "mocha": "^2.1.0",
     "organic-express-routes": "0.0.2",
-    "organic-plasma": "0.0.6"
+    "organic-plasma-feedback": "^1.0.0"
   },
   "dependencies": {
+    "organic-nucleus": "^1.0.0",
+    "organic-plasma": "^1.0.0",
     "async": "^1.5.0",
     "ejs": "^2.0.8",
     "esprima": "^2.7.1",
@@ -24,7 +26,7 @@
     "lodash": "^3.10.1",
     "markedejs": "~0.1.0",
     "methods": "^1.1.1",
-    "organic-nucleus": "0.0.1"
+    "mkdirp": "^0.5.1"
   },
   "repository": {
     "type": "git",

@@ -18,7 +18,8 @@ Organelle for generating documentation by runtime reflection of express mounted 
         "populateFilename": "api.md"
       },
       "log": false,
-      "liveTemplateReload": false
+      "liveTemplateReload": false,
+      "templatePath": String // defaults to path.join(organic-express-api-doc, "../template/index.html")
     }
 
 ## `routes` property
